@@ -45,4 +45,6 @@ def generateLLMTranslations():
     raise NotImplementedError()
 
 if __name__ == "__main__":
+    # NOTE Example run command:
+    # python transcribe_audio_w_translations.py transcribeAudioFiles --audio_fpaths_input_glob_expr="audio_files/Mixed_Exam_Audio_25_08_2026/*.mp3" --output_jsonl_fpath="mixed_exam_audio_whisper_test.jsonl" --test_len=3
     fire.Fire()
