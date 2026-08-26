@@ -50,7 +50,7 @@ def transcribeAudioFiles(audio_fpaths_input_glob_expr, output_jsonl_fpath, test_
         output_jsonl_fpath_w_llm_trans = os.path.splitext(output_jsonl_fpath)[0] + "_wLLMTranslations.jsonl"
 
         # NOTE our initial application involves running this on a highly unstable old laptop, so it is critical to checkpoint/restart from checkpoints
-        assert os.path.isfile(output_jsonl_fpath):
+        assert os.path.isfile(output_jsonl_fpath)
         with open(output_jsonl_fpath, encoding="utf-8") as rf:
             notrans_data = [json.loads(line) for line in rf.readlines()]
         trans_data = []
