@@ -4,6 +4,7 @@ import glob, json, os, pathlib
 # Non-standard libraries
 import fire
 from transformers import pipeline
+from openai import OpenAI
 
 def transcribeSingleAudioFile(transcriber, audio_file_path, language="japanese"):
     result = transcriber(
@@ -31,7 +32,7 @@ def transcribeAudioFiles(audio_fpaths_input_glob_expr, output_jsonl_fpath, test_
 
     with open(output_jsonl_fpath, encoding='utf8', mode='a') as wf:
         for index, audio_fp in enumerate(audio_fpaths):
-            if index >= len(data) - 1:
+            if index >= len(data):
                 print(f"Beginning transcription for audio file # {index+1} of {len(audio_fpaths)}: {audio_fp}")
                 result = transcribeSingleAudioFile(transcriber, audio_fp, language="japanese")
                 print(f"\tWhisper returned: {result}")
@@ -40,6 +41,8 @@ def transcribeAudioFiles(audio_fpaths_input_glob_expr, output_jsonl_fpath, test_
                 wf.flush()
                 os.fsync(wf.fileno()) # flush + fsync to try to be especially certain we write to checkpointing file before moving on
                 print(f"\tDumped Whisper transcription to {output_jsonl_fpath}: {result}")
+            else:
+                print(f"Skipping transcription for audio file # {index+1}; previously completed {len(data)} transcriptions..")
 
     if get_llm_translations:
         llm_key = open("chat_gpt_secret_key.txt").readline().strip()
