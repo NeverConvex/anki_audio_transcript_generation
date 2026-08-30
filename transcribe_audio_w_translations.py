@@ -63,7 +63,8 @@ def transcribeAudioFiles(audio_fpaths_input_glob_expr, output_jsonl_fpath, test_
 
         with open(output_jsonl_fpath_w_llm_trans, encoding="utf-8", mode='a') as wf:
             for index, notrans_dict in enumerate(notrans_data):
-                if index >= len(trans_data) - 1:
+                if index >= len(trans_data):
+                    print(f"Beginning llm translation for audio dict # {index+1} of {len(notrans_data)}: {notrans_dict}")
                     assert "llm_translation" not in notrans_dict.keys()
                     audio_text = notrans_dict["text"]
                     try:
@@ -86,7 +87,8 @@ def transcribeAudioFiles(audio_fpaths_input_glob_expr, output_jsonl_fpath, test_
                     wf.flush()
                     os.fsync(wf.fileno()) # flush + fsync to try to be especially certain we write to checkpointing file before moving on
                     print(f"\tAppended LLM translation and dumped transcription+translation to {output_jsonl_fpath_w_llm_trans}: {notrans_dict}")
-
+                else:
+                    print(f"Skipping llm translation for audio dict # {index+1} of {len(notrans_data)}. Previously completed first {len(trans_data)} translations")
 if __name__ == "__main__":
     # NOTE Example run command:
     # python transcribe_audio_w_translations.py transcribeAudioFiles --audio_fpaths_input_glob_expr="audio_files/Mixed_Exam_Audio_25_08_2026/*.mp3" --output_jsonl_fpath="mixed_exam_audio_whisper_test.jsonl" --test_len=3
