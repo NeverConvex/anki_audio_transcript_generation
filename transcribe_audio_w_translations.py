@@ -36,7 +36,7 @@ def transcribeAudioFiles(audio_fpaths_input_glob_expr, output_jsonl_fpath, test_
                 print(f"Beginning transcription for audio file # {index+1} of {len(audio_fpaths)}: {audio_fp}")
                 result = transcribeSingleAudioFile(transcriber, audio_fp, language="japanese")
                 print(f"\tWhisper returned: {result}")
-                result["source_file"] = pathlib.Path(audio_fp).stem + pathlib.Path(audio_fp).stem
+                result["source_file"] = pathlib.Path(audio_fp).stem + pathlib.Path(audio_fp).suffix
                 wf.write(json.dumps(result, ensure_ascii=False) + '\n')
                 wf.flush()
                 os.fsync(wf.fileno()) # flush + fsync to try to be especially certain we write to checkpointing file before moving on
